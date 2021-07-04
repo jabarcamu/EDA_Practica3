@@ -13,8 +13,6 @@ class Point {
         this.w = w; // half width
         this.h = h; // half height
     }
-
-
     
     contains(point) {
         var temp = (
@@ -56,17 +54,25 @@ class QuadTree {
         let _x = this.boundary.x;
         let _y = this.boundary.y;
         let _w = this.boundary.w * 0.5;
-        let _h = this.boundary.h * 0.5; let px0 = _x + _w;
+        let _h = this.boundary.h * 0.5; 
+        
+        let px0 = _x + _w;
         let px1 = _x - _w;
         let py0 = _y + _h;
-        let py1 = _y - _h; let ne = new Rectangle(px0, py1, _w, _h);
+        let py1 = _y - _h;
+
+        let ne = new Rectangle(px0, py1, _w, _h);
         this.northeast = new QuadTree(ne, this.capacity);
+
         let nw = new Rectangle(px1, py1, _w, _h);
         this.northwest = new QuadTree(nw, this.capacity);
+
         let se = new Rectangle(px0, py0, _w, _h);
         this.southeast = new QuadTree(se, this.capacity);
+
         let sw = new Rectangle(px1, py0, _w, _h);
         this.southwest = new QuadTree(sw, this.capacity);
+        
         this.divided = true;
         // 3.- Hacer: this.divided <- true
     }
@@ -105,6 +111,11 @@ class QuadTree {
               return true;
             }
           }
+    }
+
+    // implentar el query
+    query(range, found) {
+      
     }
 
     show() {
