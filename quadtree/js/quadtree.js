@@ -12,6 +12,10 @@ class Point {
         this.y = y;
         this.w = w; // half width
         this.h = h; // half height
+        // this.left = x - w / 2;
+        // this.right = x + w / 2;
+        // this.top = y - h / 2;
+        // this.bottom = y + h / 2;
     }
     
     contains(point) {
@@ -20,15 +24,26 @@ class Point {
             (point.y >= this.y - this.h) && (point.y < this.y + this.h) // alto
           )
         return temp;
+
+        // return (
+        //   this.left <= point.x && point.x <= this.right &&
+        //   this.top <= point.y && point.y <= this.bottom
+        // );
+
     }
 
     
     intersects(range) {
-        var temp = (
-            (range.x - range.w > this.x + this.w) || (range.x + range.w < this.x - this.w) ||
-            (range.y - range.h > this.y + this.h )||(range.y + range.h < this.y - this.h)
-          )
-          return temp 
+        // var temp = (
+        //     (range.x - range.w > this.x + this.w) || (range.x + range.w < this.x - this.w) ||
+        //     (range.y - range.h > this.y + this.h) || (range.y + range.h < this.y - this.h)
+        //   )
+        //   return temp 
+
+        return !(
+          this.right < range.left || range.right < this.left ||
+          this.bottom < range.top || range.bottom < this.top
+        );
     }
 }
 
@@ -115,7 +130,27 @@ class QuadTree {
 
     // implentar el query
     query(range, found) {
-      
+      if (!found) {
+        found = [];
+      }      
+  
+      if (!range.intersects(this.boundary)) {
+        return found;
+      }
+  
+      for (let p of this.points) {
+        if (range.contains(p)) {
+          found.push(p);
+        }
+      }
+      if (this.divided) {
+        this.northwest.query(range, found);
+        this.northeast.query(range, found);
+        this.southwest.query(range, found);
+        this.southeast.query(range, found);
+      }
+  
+      return found;
     }
 
     show() {
