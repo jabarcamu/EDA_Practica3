@@ -22,7 +22,7 @@ function setup() {
     // genera puntos aleatorios
     for (let i = 0; i < 100; i++) {
         let p = new Point2D(Math.random() * dim, Math.random() * dim);        
-        qt.insert(p);
+        // qt.insert(p);
     }
     background(20); // color de fondo.    
     qt.show(); // mostrar quadtree recursivamente
