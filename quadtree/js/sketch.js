@@ -1,6 +1,7 @@
 /**
  * Para graficar solo el quadtree
- * 
+ */
+ 
 
 let qt;
 let count = 0;
@@ -25,12 +26,15 @@ function setup() {
     background(0);
     qt.show();
 }
-*/
+
+
+
+
 
 /**
  * Para graficar el rectangulo: cada vez que se senhale la trayctoria
  * colorear tambien los puntos al cual se esta hacendo seguimiento
- */ 
+ 
 
 let qt;
 let count = 0;
@@ -41,7 +45,7 @@ function setup() {
     qt = new QuadTree(boundary, 4);
 
     console.log(qt);
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 100; i++) {
         let p = new Point(Math.random() * 400, Math.random() * 400);
         qt.insert(p);
     }
@@ -65,3 +69,4 @@ function draw() {
         point(p.x, p.y);
     }
 }
+*/
