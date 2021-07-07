@@ -7,7 +7,7 @@ class Point {
     this.userData = data;
   }
 
-  // Pythagorus: a^2 = b^2 + c^2
+  // Pitagoras: a^2 = b^2 + c^2
   distanceFrom(other) {
     const dx = other.x - this.x;
     const dy = other.y - this.y;
@@ -84,7 +84,7 @@ class Rectangle {
   }
 }
 
-// circle class for a circle shaped query
+// clase circulo para una consulta circular
 class Circle {
   constructor(x, y, r) {
     this.x = x;

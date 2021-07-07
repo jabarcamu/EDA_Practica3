@@ -1,35 +1,71 @@
-// Daniel Shiffman
-// https://thecodingtrain.com/CodingChallenges/098.1-quadtree.html
-// https://thecodingtrain.com/CodingChallenges/098.2-quadtree.html
-// https://thecodingtrain.com/CodingChallenges/098.3-quadtree.html
-
 let qtree;
+let particleCount = 300;
+let particles = []
+
+let withCircle;
 
 function setup() {
-  createCanvas(600, 600);
-  background(255);
+  createCanvas(700, 700);
+  background(255);  
   
-  let boundary = new Rectangle(width / 2, height / 2, width , height );
+  let boundary = new Rectangle(width , height , width *2 , height *2 );
   qtree = QuadTree.create(boundary,4);
-  for (let i = 0; i < 300; i++) {
+  
+  for (let i = 0; i < particleCount; i++) {
     let x = randomGaussian(width / 2, width / 8);
     let y = randomGaussian(height / 2, height / 8);
     let p = new Point(x, y);
+    particles.push(p);
     qtree.insert(p);
   }
+
+  withCircle= createCheckbox('Circular');
+  withCircle.checked(true);
+
+  let totalP = createP(particleCount);
+  totalP.html(`Cantidad de Puntos: ${particleCount}`);
+  total = createSlider(1, 1000, 300);
+  total.size(400, 20);
+
+  total.input(function() {
+    particleCount = total.value();
+    totalP.html(`Cantidad de Puntos: ${particleCount}`);
+    particles=[];
+
+    createCanvas(700, 700);
+    background(255);  
+    
+    let boundary = new Rectangle(width , height , width *2 , height *2 );
+    qtree = QuadTree.create(boundary,4);      
+
+    for (let i = 0; i < particleCount; i++) {
+      let x = randomGaussian(width / 2, width / 8);
+      let y = randomGaussian(height / 2, height / 8);
+      let p = new Point(x, y);
+      particles.push(p);
+      qtree.insert(p);
+    }
+    if (particleCount < particles.length) {
+      particles.splice(0, particles.length - particleCount);
+    }
+  });
+
 }
 
 function draw() {
   background(0);
 
-  //let range = new Circle(mouseX, mouseY, 64);
-  console.log(mouseX, mouseY)
-  let range = new Rectangle(mouseX, mouseY, 25, 25)
-    
+  let range;
+  if (withCircle.checked()) {
+    range = new Circle(mouseX, mouseY, 48);  
+    ellipse(range.x, range.y, range.r * 2);
+  }
+  else {
+    range = new Rectangle(mouseX, mouseY, 50, 50)
+    rect(range.x, range.y, range.w , range.h );
+  }
   show(qtree, range);
-  stroke("pink");
-  rect(range.x, range.y, range.w * 2, range.h * 2);
-  //ellipse(range.x, range.y, range.r * 2);
+  stroke("red");
   
   let points = qtree.query(range);
   for (let p of points) {
