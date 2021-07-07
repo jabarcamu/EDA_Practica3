@@ -2,7 +2,7 @@ class Point {
   constructor(x, y, userData) {
       this.x = x;
       this.y = y;
-      this.userData = userData;
+      this.userData = userData; //para detectar colisiones
   }
 }
 
@@ -34,49 +34,6 @@ class Rectangle {
   }
 }
 
-// circle class for a circle shaped query
-// class Circle {
-//   constructor(x, y, r) {
-//       this.x = x;
-//       this.y = y;
-//       this.r = r;
-//       this.rSquared = this.r * this.r;
-//   }
-
-//   contains(point) {
-//       // check if the point is in the circle by checking if the euclidean distance of
-//       // the point and the center of the circle if smaller or equal to the radius of
-//       // the circle
-//       let d = Math.pow((point.x - this.x), 2) + Math.pow((point.y - this.y), 2);
-//       return d <= this.rSquared;
-//   }
-
-//   intersects(range) {
-
-//       let xDist = Math.abs(range.x - this.x);
-//       let yDist = Math.abs(range.y - this.y);
-
-//       // radius of the circle
-//       let r = this.r;
-
-//       let w = range.w / 2;
-//       let h = range.h / 2;
-
-//       let edges = Math.pow((xDist - w), 2) + Math.pow((yDist - h), 2);
-
-//       // no intersection
-//       if (xDist > (r + w) || yDist > (r + h))
-//           return false;
-
-//       // intersection within the circle
-//       if (xDist <= w || yDist <= h)
-//           return true;
-
-//       // intersection on the edge of the circle
-//       return edges <= this.rSquared;
-//   }
-// }
-
 class QuadTree {
   constructor(boundary, n) {
       this.boundary = boundary; // Rectangle
@@ -87,15 +44,8 @@ class QuadTree {
 
   // divide el quadtree en 4 quadtrees
   subdivide() {
-
       // Algoritmo
       // 1: Crear 4 hijos: qt_northeast , qt_northwest , qt_southeast ,qt_southwest
-      // 2: Asignar los QuadTree creados a cada hijo
-      // this.northeast = qt_northeast;
-      // this.northwest = qt_northwest;
-      // this.southeast = qt_southeast;
-      // this.southwest = qt_southwest;
-
       let x = this.boundary.x;
       let y = this.boundary.y;
       let w = this.boundary.w * 0.5;
@@ -106,17 +56,18 @@ class QuadTree {
       let py0 = y + h;
       let py1 = y - h; 
 
-      let ne = new Rectangle(px0, py1, w, h);
-      this.northeast = new QuadTree(ne, this.capacity);
+      // 2: Asignar los QuadTree creados a cada hijo 
+      let qt_northeast = new Rectangle(px0, py1, w, h);
+      this.northeast = new QuadTree(qt_northeast, this.capacity);
       
-      let nw = new Rectangle(px1, py1, w, h);
-      this.northwest = new QuadTree(nw, this.capacity);
+      let qt_northwest = new Rectangle(px1, py1, w, h);
+      this.northwest = new QuadTree(qt_northwest, this.capacity);
       
-      let se = new Rectangle(px0, py0, w, h);
-      this.southeast = new QuadTree(se, this.capacity);
+      let qt_southeast = new Rectangle(px0, py0, w, h);
+      this.southeast = new QuadTree(qt_southeast, this.capacity);
       
-      let sw = new Rectangle(px1, py0, w, h);
-      this.southwest = new QuadTree(sw, this.capacity);
+      let qt_southwest = new Rectangle(px1, py0, w, h);
+      this.southwest = new QuadTree(qt_southwest, this.capacity);
       
       // 3.- Hacer: this.divided <- true
       this.divided = true;
@@ -150,58 +101,34 @@ class QuadTree {
 
   insert(point) {
 
-      // Algoritmo
-      // 1: Si el punto no esta en los limites ( boundary ) del quadtree Return
-
-      // 2: Si ( this.points.length ) < ( this.capacity ),
+    // Algoritmo
+    // 1: Si el punto no esta en los limites ( boundary ) del quadtree Return
+    if (!this.boundary.contains(point)) {
+      return false;
+    // 2: Si ( this.points.length ) < ( this.capacity ),
+    } 
+    if (this.points.length < this.capacity) {
       // 2.1 Insertamos en el vector this.points
+        this.points.push(point);
+        return true;
       // Sino
       // 2.2 Dividimos si aun no ha sido dividido
-      // 2.3 Insertamos recursivamente en los 4 hijos.
-      // this.northeast.insert ( point );
-      // this.northwest.insert ( point );
-      // this.southeast.insert ( point );
-      // this.southwest.insert ( point );
-
-      // if (!this.boundary.contains(point)) return false;   
-
-      // if (this.points.length < this.capacity) {
-      //     this.points.push(point);            
-      //     return true;
-      // }
-      // else {            
-      //     this.subdivide();
-
-      //     this.northeast.insert ( point );
-      //     this.northwest.insert ( point );
-      //     this.southeast.insert ( point );
-      //     this.southwest.insert ( point );
-      // }
-
-
-      if (!this.boundary.contains(point)) {
-          return false;
-      } if (this.points.length < this.capacity) {
-          this.points.push(point);
-          return true;
-      } else {
-          if (!this.divided) {
-              this.subdivide();
-          }
-          if (this.northeast.insert(point)) {
-              return true;
-          } else if (this.northwest.insert(point)) {
-              return true;
-          } else if (this.southeast.insert(point)) {
-              return true;
-          } else if (this.southwest.insert(point)) {
-              return true;
-          }
-      }
-
+    } else {
+        if (!this.divided) {
+            this.subdivide();
+        }
+        // 2.3 Insertamos recursivamente en los 4 hijos.      
+        if (this.northeast.insert(point)) {
+            return true;
+        } else if (this.northwest.insert(point)) {
+            return true;
+        } else if (this.southeast.insert(point)) {
+            return true;
+        } else if (this.southwest.insert(point)) {
+            return true;
+        }
+    }
   }
-
-  
 
   show() {
       stroke(255);
@@ -222,25 +149,3 @@ class QuadTree {
       }
   }
 }
-
-
-//setup()
-
-
-// var punto = new Point(1,2,4);
-// var rect = new Rectangle(0,0,5,5);
-
-// var quad = new QuadTree(rect,2);
-
-// var punto1 = new Point(1,2,4);
-// quad.insert(punto1)
-
-// var punto2 = new Point(2,3,4);
-// quad.insert(punto2)
-
-// var punto3 = new Point(3,3,4);
-// quad.insert(punto3)
-
-// console.log(quad)
-// quad.show()
-      
