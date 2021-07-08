@@ -24,11 +24,13 @@ function setup() {
         qt.insert(p);
     }
 
+    framerateP = createP('Puntos en query: ');
+
     withQuery = createCheckbox('Activar Query');
     withQuery.checked(true);
 
     let totalP = createP(particleCount);
-    totalP.html(`Cantidad de Puntos: ${particleCount}`);
+    totalP.html(`Consulta de Puntos: ${particleCount}`);
     total = createSlider(1, 1000, 20);
     total.size(400, 20);
     total.input(function() {
@@ -50,6 +52,8 @@ function setup() {
         particles.splice(0, particles.length - particleCount);
       }
     });
+
+    visitedPoints = createP('Puntos Visitados: ');
 
     background(0);
     qt.show();
@@ -73,9 +77,19 @@ function draw() {
         for (let p of points) {
             strokeWeight(4);
             point(p.x, p.y);
-            puntos.push([p.x, p.y])
-            count++;
+            let obj = {x : p.x, y: p.y}
+            puntos.push(obj);
+            count++;            
         }
+
+        framerateP.html(`Consulta de Puntos: ${count}`)
+        let concat = '';
+        for(let i = 0 ; i < puntos.length ; i++) {
+          concat +=  `( ${puntos[i].x.toFixed(2)} , ${puntos[i].y.toFixed(2)} )`
+        }
+
+        visitedPoints.html(`Puntos Visitados: ${concat}`)
+        
         //console.log(count, puntos);
     }
 
