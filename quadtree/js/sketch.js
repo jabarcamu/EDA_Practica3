@@ -13,14 +13,21 @@ let particleCount = 20;
 let particles = []
 
 function setup() {
-    createCanvas(400, 400);
+    createCanvas(800, 400);
+
+    // Create both of your off-screen graphics buffers
+    leftBuffer = createGraphics(400, 400);
+    rightBuffer = createGraphics(600, 400);
+
+
     let boundary = new Rectangle(200, 200, 200, 200);
     qt = new QuadTree(boundary, 4);
 
     console.log(qt);
     for (let i = 0; i < particleCount; i++) {
         let p = new Point(Math.random() * 400, Math.random() * 400);
-        particles.push(p);
+        //particles.push(p);
+        particles.push(new Particle(random(width), random(height)));
         qt.insert(p);
     }
 
@@ -36,7 +43,8 @@ function setup() {
       totalP.html(`Cantidad de Puntos: ${particleCount}`);
       particles=[];
 
-        createCanvas(400, 400);
+      leftBuffer = createGraphics(400, 400);
+      rightBuffer = createGraphics(600, 400);
         let boundary = new Rectangle(200, 200, 200, 200);
         qt = new QuadTree(boundary, 4);
 
@@ -44,6 +52,7 @@ function setup() {
 
       for (let i = 0; i < particleCount; i++) {
         let p1 = new Point(Math.random() * 400, Math.random() * 400);
+        particles.push(new Particle(random(width), random(height)));
         qt.insert(p1);
       }
       if (particleCount < particles.length) {
@@ -52,33 +61,79 @@ function setup() {
     });
 
     background(0);
-    qt.show();
+    qt.show(leftBuffer);
+    
 }
 
 function draw() {
-    background(0);
-    qt.show();
+  // Draw on your buffers however you like
+  drawQuadtree();
+  drawParticles();
+  // Paint the off-screen buffers onto the main canvas
+  image(leftBuffer, 0, 0);
+  image(rightBuffer, 400, 0);
+}
+
+function drawQuadtree() {
+    leftBuffer.background(0);
+    qt.show(leftBuffer);
 
     if (withQuery.checked()) {
         let count =0
         let points = []
 
-        stroke(0, 255, 0);
-        rectMode(CENTER);    
+        leftBuffer.stroke(0, 255, 0);
+        leftBuffer.rectMode(CENTER);    
         let range = new Rectangle(mouseX, mouseY, 50, 50)
-        rect(range.x, range.y, range.w * 2, range.h * 2);
+        leftBuffer.rect(range.x, range.y, range.w * 2, range.h * 2);
         let puntos = [];
         qt.query(range, points);
 
         for (let p of points) {
-            strokeWeight(4);
-            point(p.x, p.y);
+          leftBuffer.strokeWeight(4);
+          leftBuffer.point(p.x, p.y);
             puntos.push([p.x, p.y])
             count++;
         }
         //console.log(count, puntos);
     }
+}
 
-    
+function drawParticles() {
+
+  let boundary = new Rectangle(200, 200, 200, 200);
+  qtree = new QuadTree(boundary, 4);
+
+  rightBuffer.background(0);
+  rightBuffer.fill(255);
+  rightBuffer.noStroke();
+  // Run through the Grid
+  rightBuffer.stroke(255);
+
+  // Display and move all Things
+  for (let p of particles) {
+    let point = new Point(p.x, p.y, p);
+    qtree.insert(point);
+  }
+
+  for (let p of particles) {
+    let range = new Circle(p.x, p.y, p.r * 2);
+    //if (withQuadTree.checked()) {
+      let points = qtree.query(range);
+      p.checkCollision(points);
+    // } else {
+    //   p.checkCollision(particles);
+    // }
+  }
+
+  for (let p of particles) {
+    p.render(rightBuffer);
+    p.move();
+  }
+
+  // let fr = floor(frameRate());
+  // framerateP.html('Framerate: ' + fr);
+
+   //show(qtree);
 }
 

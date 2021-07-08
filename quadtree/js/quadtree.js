@@ -34,6 +34,49 @@ class Rectangle {
   }
 }
 
+// clase circulo para una consulta circular
+class Circle {
+  constructor(x, y, r) {
+    this.x = x;
+    this.y = y;
+    this.r = r;
+    this.rSquared = this.r * this.r;
+  }
+
+  contains(point) {
+    // check if the point is in the circle by checking if the euclidean distance of
+    // the point and the center of the circle if smaller or equal to the radius of
+    // the circle
+    let d = Math.pow((point.x - this.x), 2) + Math.pow((point.y - this.y), 2);
+    return d <= this.rSquared;
+  }
+
+  intersects(range) {
+
+    let xDist = Math.abs(range.x - this.x);
+    let yDist = Math.abs(range.y - this.y);
+
+    // radius of the circle
+    let r = this.r;
+
+    let w = range.w / 2;
+    let h = range.h / 2;
+
+    let edges = Math.pow((xDist - w), 2) + Math.pow((yDist - h), 2);
+
+    // no intersection
+    if (xDist > (r + w) || yDist > (r + h))
+      return false;
+
+    // intersection within the circle
+    if (xDist <= w || yDist <= h)
+      return true;
+
+    // intersection on the edge of the circle
+    return edges <= this.rSquared;
+  }
+}
+
 class QuadTree {
   constructor(boundary, n) {
       this.boundary = boundary; // Rectangle
@@ -130,22 +173,22 @@ class QuadTree {
     }
   }
 
-  show() {
-      stroke(255);
-      strokeWeight(1);
-      noFill();
-      rectMode(CENTER);
-      rect(this.boundary.x, this.boundary.y, this.boundary.w * 2, this.boundary.h*2);
+  show(graph) {
+    graph.stroke(255);
+    graph.strokeWeight(1);
+    graph.noFill();
+    graph.rectMode(CENTER);
+    graph.rect(this.boundary.x, this.boundary.y, this.boundary.w * 2, this.boundary.h*2);
       if (this.divided) {
-          this.northeast.show();
-          this.northwest.show();
-          this.southeast.show();
-          this.southwest.show();
+          this.northeast.show(graph);
+          this.northwest.show(graph);
+          this.southeast.show(graph);
+          this.southwest.show(graph);
       }
 
       for (let p of this.points) {
-          strokeWeight(4);
-          point(p.x, p.y);
+        graph.strokeWeight(4);
+        graph.point(p.x, p.y);
       }
   }
 }
