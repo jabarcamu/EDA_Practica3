@@ -8,20 +8,14 @@
 	<body>
 		<div id="info">Octree threejs demo - basic collisions with static triangle mesh<br />WASD to move, space to jump, use mouse to throw balls and move the camera.</div>
 		<div id="container"></div>
-
 		<script type="module">
 
-			import * as THREE from './js/three.js';
-
-
+			import * as THREE from './js/three.module.js';
 			import Stats from './js/stats.module.js';
-
-			import { GLTFLoader } from './js/GLTFLoader.js';
-
 			import { Octree } from './js/Octree.js';
 			import { Capsule } from './js/Capsule.js';
-
-
+			import { GLTFLoader } from './js/GLTFLoader.js';
+			
 			const clock = new THREE.Clock();
 
 			const scene = new THREE.Scene();
@@ -66,11 +60,12 @@
 
 			container.appendChild( renderer.domElement );
 
+
 			const stats = new Stats();
 			stats.domElement.style.position = 'absolute';
 			stats.domElement.style.top = '0px';
 
-			container.appendChild( stats.domElement );
+			container.appendChild(stats.domElement );
 
 			const GRAVITY = 30;
 
@@ -85,20 +80,21 @@
 			const spheres = [];
 			let sphereIdx = 0;
 
-			for ( let i = 0; i < NUM_SPHERES; i ++ ) {
+			for ( let i = 0; i < NUM_SPHERES; i++ ) {
 
-				const sphere = new THREE.Mesh( sphereGeometry, sphereMaterial );
-				sphere.castShadow = true;
-				sphere.receiveShadow = true;
+			const sphere = new THREE.Mesh( sphereGeometry, sphereMaterial );
+			sphere.castShadow = true;
+			sphere.receiveShadow = true;
 
-				scene.add( sphere );
+			scene.add( sphere );
 
-				spheres.push( { mesh: sphere, collider: new THREE.Sphere( new THREE.Vector3( 0, - 100, 0 ), SPHERE_RADIUS ), velocity: new THREE.Vector3() } );
+			spheres.push( { mesh: sphere, collider: new THREE.Sphere( new THREE.Vector3( 0, - 100, 0 ), SPHERE_RADIUS ), velocity: new THREE.Vector3() } );
 
 			}
-
+			
+			//Uso de Octree
 			const worldOctree = new Octree();
-
+			//Uso de Capsule
 			const playerCollider = new Capsule( new THREE.Vector3( 0, 0.35, 0 ), new THREE.Vector3( 0, 1, 0 ), 0.35 );
 
 			const playerVelocity = new THREE.Vector3();
@@ -209,40 +205,40 @@
 
 				for ( let i = 0; i < spheres.length; i ++ ) {
 
-					const s1 = spheres[ i ];
+			const s1 = spheres[ i ];
 
-					for ( let j = i + 1; j < spheres.length; j ++ ) {
+			for ( let j = i + 1; j < spheres.length; j ++ ) {
 
-						const s2 = spheres[ j ];
+			const s2 = spheres[ j ];
 
-						const d2 = s1.collider.center.distanceToSquared( s2.collider.center );
-						const r = s1.collider.radius + s2.collider.radius;
-						const r2 = r * r;
+			const d2 = s1.collider.center.distanceToSquared( s2.collider.center );
+			const r = s1.collider.radius + s2.collider.radius;
+			const r2 = r * r;
 
-						if ( d2 < r2 ) {
+			if ( d2 < r2 ) {
 
-							const normal = s1.collider.clone().center.sub( s2.collider.center ).normalize();
-							const v1 = normal.clone().multiplyScalar( normal.dot( s1.velocity ) );
-							const v2 = normal.clone().multiplyScalar( normal.dot( s2.velocity ) );
-							s1.velocity.add( v2 ).sub( v1 );
-							s2.velocity.add( v1 ).sub( v2 );
+			const normal = s1.collider.clone().center.sub( s2.collider.center ).normalize();
+			const v1 = normal.clone().multiplyScalar( normal.dot( s1.velocity ) );
+			const v2 = normal.clone().multiplyScalar( normal.dot( s2.velocity ) );
+			s1.velocity.add( v2 ).sub( v1 );
+			s2.velocity.add( v1 ).sub( v2 );
 
-							const d = ( r - Math.sqrt( d2 ) ) / 2;
+			const d = ( r - Math.sqrt( d2 ) ) / 2;
 
-							s1.collider.center.addScaledVector( normal, d );
-							s2.collider.center.addScaledVector( normal, - d );
+			s1.collider.center.addScaledVector( normal, d );
+			s2.collider.center.addScaledVector( normal, - d );
 
-						}
+			}
 
-					}
+			}
 
-				}
+			}
 
 			}
 
 			function updateSpheres( deltaTime ) {
 
-				spheres.forEach( sphere =>{
+			spheres.forEach( sphere =>{
 
 					sphere.collider.center.addScaledVector( sphere.velocity, deltaTime );
 
@@ -369,23 +365,21 @@
 
 				for ( let i = 0 ; i < STEPS_PER_FRAME ; i ++ ) {
 
-					controls( deltaTime );
+			controls( deltaTime );
 
-					updatePlayer( deltaTime );
+			updatePlayer( deltaTime );
 
-					updateSpheres( deltaTime );
-
-				}
-
-				renderer.render( scene, camera );
-
-				stats.update();
-
-				requestAnimationFrame( animate );
+			updateSpheres( deltaTime );
 
 			}
 
+			renderer.render( scene, camera );
 
+			stats.update();
+
+			requestAnimationFrame( animate );
+
+			}
 		</script>
 	</body>
 </html>
