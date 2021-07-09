@@ -13,7 +13,8 @@ let particleCount = 20;
 let particles = []
 
 function setup() {
-    createCanvas(400, 400);
+    let dibujo = createCanvas(400, 400);
+    dibujo.parent("dibujo");
     let boundary = new Rectangle(200, 200, 200, 200);
     qt = new QuadTree(boundary, 4);
 
@@ -23,22 +24,28 @@ function setup() {
         particles.push(p);
         qt.insert(p);
     }
+    
 
     framerateP = createP('Puntos en query: ');
+    framerateP.parent("menu");
 
     withQuery = createCheckbox('Activar Query');
     withQuery.checked(true);
+    withQuery.parent("menu");
 
     let totalP = createP(particleCount);
+    totalP.parent("menu");
     totalP.html(`Consulta de Puntos: ${particleCount}`);
     total = createSlider(1, 1000, 20);
+    total.parent("menu");
     total.size(400, 20);
     total.input(function() {
       particleCount = total.value();
       totalP.html(`Cantidad de Puntos: ${particleCount}`);
       particles=[];
 
-        createCanvas(400, 400);
+        let dibujo = createCanvas(400, 400);
+        dibujo.parent("dibujo");
         let boundary = new Rectangle(200, 200, 200, 200);
         qt = new QuadTree(boundary, 4);
 
@@ -54,6 +61,7 @@ function setup() {
     });
 
     visitedPoints = createP('Puntos Visitados: ');
+    visitedPoints.parent("puntos");
 
     background(0);
     qt.show();
