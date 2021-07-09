@@ -12,7 +12,7 @@ let mask;
 let dim = 320; // dimension
 let vectorTraslacion; // vector para hacer la traslacion de puntos.
 let points = [];
-
+let colorMaskAndPoints = 'red';
 function setup() {
 
     createCanvas(dim * 2, dim * 2, WEBGL); // canvas en 3D
@@ -140,44 +140,32 @@ function setup() {
     
     // rotateX(PI / 3)
     // rotateZ(PI / 3)
-    background(20);
+    background(0);
     ot.show(); // mostrar octree recursivamente
     // setTimeout(create, 2000);
     
-    frameRate(0.5);
+    frameRate(1);
     
 }
 
 function draw(){
 
-    background(20); // color de fondo.
+    background(0); // color de fondo.
     rotateY(frameCount * 0.2);
     ot.show(); // mostrar octree recursivamente
-    // rotateX(PI/Math.random()*4);
-    // rotateY(PI/Math.random()*4);
-
-    // let dimrnd = Math.random() * dim; // ancho - alto - profundidad, aleatorios   
     
-    // let vecrnd = p5.Vector.random3D(); // generar numeros aleatorios - vector unitario            
-    // let x = vecrnd.x * (dim / 2); // origen x
-    // let y = vecrnd.y * (dim / 2); // origen y
-    // let z = vecrnd.z * (dim / 2); // origen z    
-    // let mindimvalue = dimrnd;    
-
-    // dimrnd = (Math.abs((dim / 2) - x)) > dimrnd ? dimrnd : (Math.abs((dim / 2) - x));
-    // dimrnd = (Math.abs((-dim / 2) - y)) > dimrnd ? dimrnd : (Math.abs((-dim / 2) - y));
-    // dimrnd = (Math.abs((-dim / 2) - z)) > dimrnd ? dimrnd : (Math.abs((-dim / 2) - z));
-    
-    // // console.log('dimention ...',Math.round(x),' * ',Math.round(y),' * ',Math.round(z),' * ', Math.round(mindimvalue),' * ', Math.round(dimrnd));         
-
     mask = generateMask(dim);
+    // mask = (new Cube(-dim/2,dim/2,dim/2,dim,dim,dim)); // mascara total
+    // mask = (new Cube(0,0,0,dim/2,dim/2,dim/2)); // marcara superior
+    // mask = (new Cube(-dim/2,dim/2,dim/2,dim/2,dim/2,dim/2)); // marcara superior
+
 
     let vt = createVector(mask.w / 2, -mask.h / 2, -mask.d / 2); // mostrar cubo correctamente en el canvas
     let vo = createVector(mask.x, mask.y, mask.z);
-
+    
     push();
-    stroke(255, 128, 64); // color del cubo
-    strokeWeight(1); // espesor del cubo
+    stroke(colorMaskAndPoints); // color del cubo
+    strokeWeight(3); // espesor del cubo
     translate(vo.add(vt));
     box(mask.w, mask.h, mask.d); // un cubo        
     pop();
@@ -185,12 +173,12 @@ function draw(){
 
     points = [];
     ot.query(mask, points);
-    // console.log('puntos ..', points);
+    console.log('puntos ..', points);
     // dibuja los puntos
     for (let p of points) {
         push();
         translate(p.x, p.y, p.z);
-        stroke(255, 128, 64)
+        stroke(colorMaskAndPoints);
         strokeWeight(1);
         sphere(4);
         pop();
