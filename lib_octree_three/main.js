@@ -52,16 +52,16 @@ function rand(n,m){
 
 controls.update();
 
-var opcion_animar = false;
+
 var animate = function () {
     requestAnimationFrame( animate );
-        controls.update();
-        renderer.render( scene, camera );
-    if(opcion_animar == true){
-        //*** ROTAR TODA LA ESCENA
-        scene.rotation.x += 0.01;
-        scene.rotation.y += 0.01;
-    }
+    controls.update();
+    renderer.render( scene, camera );
+
+    //*** ROTAR TODA LA ESCENA
+    scene.rotation.x += 0.01;
+    scene.rotation.y += 0.01;
+
 };
 
 animate(); 
