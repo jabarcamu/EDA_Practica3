@@ -5,7 +5,9 @@ let particles = []
 let withCircle;
 
 function setup() {
-  createCanvas(700, 700);
+  
+  let dibujo = createCanvas(700, 700);
+  dibujo.parent("dibujo");
   background(255);  
   
   let boundary = new Rectangle(width , height , width *2 , height *2 );
@@ -20,11 +22,14 @@ function setup() {
   }
 
   withCircle= createCheckbox('Circular');
+  withCircle.parent("menu");
   withCircle.checked(true);
 
   let totalP = createP(particleCount);
+  totalP.parent("menu");
   totalP.html(`Cantidad de Puntos: ${particleCount}`);
   total = createSlider(1, 1000, 300);
+  total.parent("menu");
   total.size(400, 20);
 
   total.input(function() {
@@ -32,7 +37,8 @@ function setup() {
     totalP.html(`Cantidad de Puntos: ${particleCount}`);
     particles=[];
 
-    createCanvas(700, 700);
+    let dibujo = createCanvas(700, 700);
+    dibujo.parent("dibujo");
     background(255);  
     
     let boundary = new Rectangle(width , height , width *2 , height *2 );
