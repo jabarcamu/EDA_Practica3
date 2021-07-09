@@ -30,6 +30,60 @@ function setup() {
         ot.insert(p);
     }
 
+
+    // testing
+    let dimTest = 100;
+    let testing = new Test(new Cube(0,0,0,dimTest,dimTest,dimTest));
+    let pointTesting = [];
+
+    for (let j = 0; j < 100; j++) {        
+        let x = Math.random() * dimTest; // origen x
+        let y = Math.random() * -1 * dimTest; // origen y
+        let z = Math.random() * -1 * dimTest; // origen z  
+        let np = new Point3D(x,y,z); 
+        // console.log('point ...........',np);
+        pointTesting.push(np); 
+    }
+
+    console.log('cube ...........',testing);
+    testing.contains(pointTesting);
+    console.log('Cube Testing ...', testing.cube.x,' * ',testing.cube.y,' * ',testing.cube.z,' * ',
+    testing.cube.x + testing.cube.w,' * ', testing.cube.y - testing.cube.h,' * ', testing.cube.z - testing.cube.d);
+    console.log('Contains ...', testing.containsInCube);
+    console.log('No Contains ...', testing.noContainsInCube);
+
+    pointTesting = [];
+    testing.containsInCube = [];
+    testing.noContainsInCube = [];
+    for (let j = 0; j < 20; j++) {  
+        let vecrnd = p5.Vector.random3D(); // generar numeros aleatorios - vector unitario                  
+        let x = vecrnd.x * dimTest; // origen x
+        let y = vecrnd.y * dimTest; // origen y
+        let z = vecrnd.y * dimTest; // origen z  
+        let np = new Point3D(x,y,z); 
+        // console.log('point ...........',np);
+        pointTesting.push(np); 
+    }
+
+    testing.contains(pointTesting);
+    console.log('cube  ...........',testing);    
+    console.log('Cube Testing Random...', testing.cube.x,' * ',testing.cube.y,' * ',testing.cube.z,' * ',
+    testing.cube.x + testing.cube.w,' * ', testing.cube.y - testing.cube.h,' * ', testing.cube.z - testing.cube.d);
+    console.log('Contains Random...', testing.containsInCube.length,' * ',testing.containsInCube);
+    console.log('No Contains Random...',testing.noContainsInCube.length, ' * ', testing.noContainsInCube);
+
+    let cubeTesting = [];
+    for (let k = 0; k < 10; k++) {
+        cubeTesting.push(generateMask(dimTest));                
+    }
+    testing.intersects(cubeTesting);
+    console.log('Cube Testing Intersect ...........',testing);    
+    console.log('Cube Testing Random...', testing.cube.x,' * ',testing.cube.y,' * ',testing.cube.z,' * ',
+    testing.cube.x + testing.cube.w,' * ', testing.cube.y - testing.cube.h,' * ', testing.cube.z - testing.cube.d);
+    console.log('Intersect Random...', testing.intersectCube.length,' * ',testing.intersectCube);
+    console.log('No Intersect Random...',testing.noIntersectCube.length, ' * ', testing.noIntersectCube);
+
+
     // ot.insert(new Point3D(0, 0, 0));
     // ot.insert(new Point3D(-dim / 4, dim / 4, -dim / 4));
     // ot.insert(new Point3D(dim / 4, dim / 4, -dim / 4));
@@ -86,36 +140,37 @@ function setup() {
     
     // rotateX(PI / 3)
     // rotateZ(PI / 3)
-
-    // ot.show(); // mostrar octree recursivamente
+    background(20);
+    ot.show(); // mostrar octree recursivamente
     // setTimeout(create, 2000);
     
-    frameRate(0.2);
+    frameRate(0.5);
     
 }
 
 function draw(){
+
     background(20); // color de fondo.
     rotateY(frameCount * 0.2);
     ot.show(); // mostrar octree recursivamente
     // rotateX(PI/Math.random()*4);
     // rotateY(PI/Math.random()*4);
 
-    let dimrnd = Math.random() * dim; // ancho - alto - profundidad, aleatorios   
+    // let dimrnd = Math.random() * dim; // ancho - alto - profundidad, aleatorios   
     
-    let vecrnd = p5.Vector.random3D(); // generar numeros aleatorios - vector unitario            
-    let x = vecrnd.x * (dim / 2); // origen x
-    let y = vecrnd.y * (dim / 2); // origen y
-    let z = vecrnd.z * (dim / 2); // origen z    
-    let mindimvalue = dimrnd;    
+    // let vecrnd = p5.Vector.random3D(); // generar numeros aleatorios - vector unitario            
+    // let x = vecrnd.x * (dim / 2); // origen x
+    // let y = vecrnd.y * (dim / 2); // origen y
+    // let z = vecrnd.z * (dim / 2); // origen z    
+    // let mindimvalue = dimrnd;    
 
-    dimrnd = (Math.abs((dim / 2) - x)) > dimrnd ? dimrnd : (Math.abs((dim / 2) - x));
-    dimrnd = (Math.abs((-dim / 2) - y)) > dimrnd ? dimrnd : (Math.abs((-dim / 2) - y));
-    dimrnd = (Math.abs((-dim / 2) - z)) > dimrnd ? dimrnd : (Math.abs((-dim / 2) - z));
+    // dimrnd = (Math.abs((dim / 2) - x)) > dimrnd ? dimrnd : (Math.abs((dim / 2) - x));
+    // dimrnd = (Math.abs((-dim / 2) - y)) > dimrnd ? dimrnd : (Math.abs((-dim / 2) - y));
+    // dimrnd = (Math.abs((-dim / 2) - z)) > dimrnd ? dimrnd : (Math.abs((-dim / 2) - z));
     
-    console.log('dimention ...',Math.round(x),' * ',Math.round(y),' * ',Math.round(z),' * ', Math.round(mindimvalue),' * ', Math.round(dimrnd));         
+    // // console.log('dimention ...',Math.round(x),' * ',Math.round(y),' * ',Math.round(z),' * ', Math.round(mindimvalue),' * ', Math.round(dimrnd));         
 
-    mask = new Cube(x, y, z, dimrnd, dimrnd, dimrnd);
+    mask = generateMask(dim);
 
     let vt = createVector(mask.w / 2, -mask.h / 2, -mask.d / 2); // mostrar cubo correctamente en el canvas
     let vo = createVector(mask.x, mask.y, mask.z);
@@ -140,5 +195,24 @@ function draw(){
         sphere(4);
         pop();
     }
+    
+}
+
+
+function generateMask(dim){
+
+    let dimrnd = Math.random() * dim; // ancho - alto - profundidad, aleatorios   
+    
+    let vecrnd = p5.Vector.random3D(); // generar numeros aleatorios - vector unitario            
+    let x = vecrnd.x * (dim / 2); // origen x
+    let y = vecrnd.y * (dim / 2); // origen y
+    let z = vecrnd.z * (dim / 2); // origen z          
+
+    dimrnd = (Math.abs((dim / 2) - x)) > dimrnd ? dimrnd : (Math.abs((dim / 2) - x));
+    dimrnd = (Math.abs((-dim / 2) - y)) > dimrnd ? dimrnd : (Math.abs((-dim / 2) - y));
+    dimrnd = (Math.abs((-dim / 2) - z)) > dimrnd ? dimrnd : (Math.abs((-dim / 2) - z));
+    
+    // console.log('dimention ...',Math.round(x),' * ',Math.round(y),' * ',Math.round(z),' * ', Math.round(mindimvalue),' * ', Math.round(dimrnd));         
+    return new Cube(x, y, z, dimrnd, dimrnd, dimrnd);
     
 }
