@@ -53,7 +53,6 @@ class Octree {
 		this.box.min.x -= 0.01;
 		this.box.min.y -= 0.01;
 		this.box.min.z -= 0.01;
-
 		return this;
 
 	}
