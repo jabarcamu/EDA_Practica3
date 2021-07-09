@@ -33,8 +33,8 @@ controls.update();
 
 //estadisticas de frame por sec
 var stats = new Stats();
-stats.showPanel(3);
-midoc.appendChild(stats.dom);
+stats.showPanel(0);
+midoc.append(stats.dom);
 
 //Parametros desde el gui
 var params
@@ -140,7 +140,7 @@ function animate(){
 	stats.begin();	
 	render();
 	//scene.remove.apply(scene, scene.children);
-	//renderer.renderLists.dispose();
+	renderer.renderLists.dispose();
 	stats.end();
 }
 function insertPointOctree(ppX,ppY,ppZ,currentMesh){

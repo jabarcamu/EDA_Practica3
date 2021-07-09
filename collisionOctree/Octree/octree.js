@@ -1,4 +1,4 @@
-var alpha = 0.2;
+
 
 class Point{
 	constructor(x,y,z,userData){
