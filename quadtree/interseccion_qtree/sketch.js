@@ -6,7 +6,9 @@ let withQuadTree;
 let total;
 
 function setup() {
-  createCanvas(600, 400);
+
+  let dibujo = createCanvas(600, 400);
+  dibujo.parent("dibujo");
 
   // Put 2000 Things in the system
   for (let i = 0; i < particleCount; i++) {
@@ -14,10 +16,14 @@ function setup() {
   }
 
   framerateP = createP('Fotogramas: ');
+  framerateP.parent("menu");
   withQuadTree = createCheckbox('Usando Quadtree');
+  withQuadTree.parent("menu");
   withQuadTree.checked(true);
   let totalP = createP(particleCount);
+  totalP.parent("menu");
   total = createSlider(1, 5000, 1000);
+  total.parent("menu");
   total.input(function() {
     particleCount = total.value();
     totalP.html(particleCount);
