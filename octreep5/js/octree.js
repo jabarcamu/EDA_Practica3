@@ -18,27 +18,38 @@ class Cube{
     }
     // verifica si un punto 3D pertenece al cubo
     constains(point){
-
+        // console.log('point cube ',this.x,' ', (this.x + this.w), ' ', (this.y - this.h),' ', this.y, (this.z - this.d),this.z);
+        // console.log('point 3d ', point.x,' ',point.y,' ',point.z);
         return (
             (this.x <= point.x && point.x <= (this.x + this.w)) && 
-            (this.y <= point.y && point.y <= (this.y + this.h)) &&
-            (this.z <= point.z && point.z <= (this.z + this.d))
+            ((this.y - this.h) <= point.y && point.y <= this.y) &&
+            ((this.z - this.d) <= point.z && point.z <= this.z)
         );
     }
-    // verifica si existen interseccion entre Cubo A y Cubo B
+    // verifica si existen interseccion entre Cubo A(externo) y Cubo B(interno)
     intersects(range){
         // cubo A(seis puntos por cubo).
-        var RectALeft = range.x,RectARight = (range.x + range.w),RectATop = (range.y + range.h),RectABottom = range.y,RectAFront = range.z,RectABack = (range.z + range.d);
+        var RectALeft = range.x,
+        RectARight = (range.x + range.w),
+        RectATop = (range.y - range.h),
+        RectABottom = range.y,
+        RectAFront = range.z,
+        RectABack = (range.z - range.d);
         // cubo B(seis puntos por cubo).
-        var RectBLeft = this.x,RectBRight = (this.x + this.w),RectBTop = (this.y + this.h),RectBBottom = this.y,RectBFront = this.z, RectBBack = (this.z + this.d);                   
+        var RectBLeft = this.x,
+        RectBRight = (this.x + this.w),
+        RectBTop = (this.y - this.h),
+        RectBBottom = this.y,
+        RectBFront = this.z,
+        RectBBack = (this.z - this.d);                   
         
         return (
             RectALeft < RectBRight && 
             RectARight > RectBLeft &&
-            RectABottom < RectBTop &&
-            RectATop > RectBBottom && 
-            RectAFront < RectBBack &&
-            RectABack > RectBFront
+            RectATop < RectBBottom &&
+            RectABottom > RectBTop &&             
+            RectABack < RectBFront &&
+            RectAFront > RectBBack             
         );         
     }
 }
@@ -59,6 +70,7 @@ class OctTree {
         this.capacity = n; // maxima cantidad de puntos en el cubo
         this.points = []; // almacena los puntos
         this.divided = false; // indica que tiene cubos internos
+        // console.log('Constructor octree ', this.boundary);
     }  
 
     // subdivide el OctTree en 8 regiones, si supera la capacidad de puntos.
@@ -70,14 +82,14 @@ class OctTree {
         var h2 = this.boundary.h / 2.0; // mitad del alto 
         var d2 = this.boundary.d / 2.0; // mitad de la profundidad               
 
-        this.northwestInf = new OctTree(new Cube(x, y, z + d2, w2, h2, d2),this.capacity);
-        this.northeastInf = new OctTree(new Cube(x + w2, y, z + d2, w2, h2, d2),this.capacity)
+        this.northwestInf = new OctTree(new Cube(x, y, z + (-1 * d2), w2, h2, d2),this.capacity);
+        this.northeastInf = new OctTree(new Cube(x + w2, y, z + (-1 * d2), w2, h2, d2),this.capacity)
         this.southwestInf = new OctTree(new Cube(x,y, z, w2, h2, d2),this.capacity)
         this.southeastInf = new OctTree(new Cube(x + w2, y, z, w2, h2, d2),this.capacity)
-        this.northwestSup = new OctTree(new Cube(x, y + h2, z + d2, w2, h2, d2),this.capacity);
-        this.northeastSup = new OctTree(new Cube(x + w2, y + h2, z + d2, w2, h2, d2),this.capacity)
-        this.southwestSup = new OctTree(new Cube(x, y + h2, z, w2, h2, d2),this.capacity)
-        this.southeastSup = new OctTree(new Cube(x + w2, y + w2, z, w2, h2, d2),this.capacity)
+        this.northwestSup = new OctTree(new Cube(x, y + (-1 * h2), z + (-1 * d2), w2, h2, d2),this.capacity);
+        this.northeastSup = new OctTree(new Cube(x + w2, y + (-1 * h2), z + (-1 * d2), w2, h2, d2),this.capacity)
+        this.southwestSup = new OctTree(new Cube(x, y + (-1 * h2), z, w2, h2, d2),this.capacity)
+        this.southeastSup = new OctTree(new Cube(x + w2, y + (-1 * h2), z, w2, h2, d2),this.capacity)
                 
         this.divided = true; // indica que ya esta dividido
     }
@@ -121,26 +133,30 @@ class OctTree {
             this.northwestSup.insert(point);
             this.northeastSup.insert(point);
             this.southwestSup.insert(point);
-            this.southeastSup.insert(point);
+            this.southeastSup.insert(point);        
         }
     }  
 
     // retorna los puntos que encontro, en base al cubo seleccionado
     query(boundaryExtern,pointsReturn){
-        
+        // console.log('query .......');
         // verificar si existe interseccion de cubos(cubo padre vs cubo externo)
         if(this.boundary.intersects(boundaryExtern)){
             // Obtener los puntos
+            let pp = [];
             for (let i = 0; i < this.points.length; i++) {
                 let p = this.points[i];
                 // verifica el punto pertence al cubo externo
                 if(boundaryExtern.constains(p)){
                     pointsReturn.push(p);
+                    pp.push(p);
                 }                
             }
+            // console.log('query points ...', pp.length);
         }
         // verifica si tiene octree hijos y obtiene los puntos recursivamente
         if(this.divided){
+            // console.log('query is divided.......');
             this.northwestInf.query(boundaryExtern,pointsReturn);            
             this.northeastInf.query(boundaryExtern,pointsReturn);        
             this.southwestInf.query(boundaryExtern,pointsReturn);        
@@ -158,47 +174,39 @@ class OctTree {
         console.log('(',b.x,',',b.y,',',b.z,') -> (',b.w,',',b.h,',',b.d,')', ' -> ', this.points.length);        
     }
     // muestra recursivamente los octree padre e hijos
-    show(dimension) {        
+    show() {        
         // this.printBoundary(this.boundary);
         stroke(255); // color del cubo
         strokeWeight(1); // espesor del cubo
         noFill(); // transparente para no sobreponer elementos
         //rectMode(CENTER); // rectangulo en el centro
-        let vector = createVector(-dimension/2,-dimension/2,-dimension/2);                
-        let b = this.boundary; // cubo        
-        let v = createVector(b.w/2 + b.x,b.h/2 + b.y, b.d/2 + b.z);
-        vector.add(v);
-
+                       
         let cube = this.boundary;
-        push();
+        let vectorTraslacion = createVector(cube.w/2, -cube.h/2, -cube.d/2); // mostrar cubo correctamente en el canvas
+        let vectorOrigin = createVector(cube.x, cube.y, cube.z);        
 
-        // translate(cube.x - dimension / 2,cube.y - dimension / 2,cube.z - dimension / 2);
-        // translate(0,0,0);
-        // console.log('translate ...   ', vector,' * ',b.w/2 - b.x,' * ',b.h/2 - b.y,' * ',b.d/2 - b.z);  
-        rotateY(Math.PI / 3);      
-        translate(vector);
+        push();
+        translate(vectorOrigin.add(vectorTraslacion));
         box(cube.w, cube.h, cube.d); // un cubo
         pop();
         if(this.divided){
-            this.northwestInf.show(dimension);
-            this.northeastInf.show(dimension);
-            this.southwestInf.show(dimension);
-            this.southeastInf.show(dimension);
-            this.northwestSup.show(dimension);
-            this.northeastSup.show(dimension);
-            this.southwestSup.show(dimension);
-            this.southeastSup.show(dimension);
+            this.northwestInf.show(vectorTraslacion);
+            this.northeastInf.show(vectorTraslacion);
+            this.southwestInf.show(vectorTraslacion);
+            this.southeastInf.show(vectorTraslacion);
+            this.northwestSup.show(vectorTraslacion);
+            this.northeastSup.show(vectorTraslacion);
+            this.southwestSup.show(vectorTraslacion);
+            this.southeastSup.show(vectorTraslacion);
         }
         
         // dibuja los puntos
         for (let p of this.points) {                                    
-            push();    
-            let vec = createVector(-dimension/2,-dimension/2,-dimension/2);        
-            let pp = createVector(p.x,p.y,p.z);
-            translate(vec.add(pp));
-            strokeWeight(1);
-            fill(255);            
-            sphere(2);            
+            push();         
+            translate(p.x,p.y,p.z);       
+            stroke(255,255,255)
+            strokeWeight(1);                   
+            sphere(4);            
             pop();
         }
         
