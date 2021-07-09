@@ -1,2 +1,4 @@
-# EDA_Practica3
-* Implementacion de Quadtree en p5.js
+# Octree Busqueda y Animacion
+* Basado en la librearia THREE.js
+* Evento de busqueda por punto 
+* Extraccion de cubos dependientes por busqueda
