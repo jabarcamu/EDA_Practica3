@@ -1,12 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title>three.js - misc - octree collisions</title>
+		<title>Colisiones Octree en three.js</title>
+		<script src="../../lib/bootstrap.min.js"> </script>
+		<link rel="stylesheet" href="../../css/bootstrap.min.css">
 		<meta charset=utf-8 />
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 	</head>
 	<body>
-		<div id="info">Octree threejs demo - basic collisions with static triangle mesh<br />WASD to move, space to jump, use mouse to throw balls and move the camera.</div>
+		<form action="../../index.html">
+			<input type="submit" value="Regresar al inicio" />
+		</form>			
+	
+		<div class="row justify-content-center">
+			<div class="btn-group btn-group-toggle justify-content-center" data-toggle="buttons">
+				<form action="../index_octree_three.html">
+					<input type="submit" value="Octree Three" />
+				</form>
+				<form action="../octreep5/index.html">
+					<input type="submit" value="Octree p5" />
+				</form>	
+			</div>
+		</div>
+		<div id="info">
+			Octree threejs demo - colisiones basicas con las formas de triangulos estatiscos 
+			<br/>
+			para moverse usar las teclas W A S D, para saltar tecla ESPACIO, usar el mouse para lanzar
+			esferes y mover la camara
+		</div>
 		<div id="container"></div>
 		<script type="module">
 

@@ -10,50 +10,56 @@
             canvas {width:100%;height:100%;}
         </style>
         
-        <!--<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">-->
         <link href="lib_octree_three/bootstrap.min.css" rel="stylesheet">
         <link href="lib_octree_three/custom.min.css" rel="stylesheet">
     </head>
-
     
-    
-    <body class="nav-md">
+    <body class="container">
         <div class="container body">
-        <div class="main_container">
-            
-            
-        <div class="col-md-12 col-sm-12 col-xs-12 center">
-            <h3></h3>
-
-            <input type="text" id="M" value="100" placeholder="size" size="2">
-            <input type="text" id="N1" value="4" placeholder="n" size="1">
-            <button onclick="create()">Create</button>
-
-            <input type="text" id="N2" value="30" placeholder="n" size="1">
-            <button onclick="nrand()" class="btn btn-success" >Random</button>
-
-
-            <input type="text" id="X" placeholder="x" size="1">
-            <input type="text" id="Y" placeholder="y" size="1">
-            <input type="text" id="Z" placeholder="z" size="1">
-
-            <button onclick="insert()">Insert</button>
-
-
-            <input type="text" id="CX" placeholder="x" size="1" value="75">
-            <input type="text" id="CY" placeholder="y" size="1" value="75">
-            <input type="text" id="CZ" placeholder="z" size="1" value="75">
-
-            <input type="text" id="CW" placeholder="w" size="1" value="25">
-            <input type="text" id="CH" placeholder="h" size="1" value="25">
-            <input type="text" id="CD" placeholder="d" size="1" value="25">
-
-            <button onclick="query()">Query</button>
-            <button onclick="squery()">Show Query</button>
-            <button onclick="dquery()">Clean Query</button>
-            <button onclick="clean()">Delete</button>
-            <h3></h3>
-        </div>
+            <div class="main_container">
+                <form action="../index.html">
+                    <input type="submit" value="Regresar al inicio" />
+                </form>			
+                    
+                <div class="col-md-3 col-md-offset-5">
+                    <div class="btn-group">
+                        <input type="button" onclick="location.href='octreep5/index.html';" value="Octree p5" />
+                        <input type="button" onclick="location.href='collisionOctree/games_fps.html';" value="Colisiones" />                        
+                    </div>
+                </div>
+        
+                <div class="col-md-12 col-sm-12 col-xs-12 center">
+                    <h3></h3>
+        
+                    <input type="text" id="M" value="100" placeholder="Tamaño" size="2">
+                    <input type="text" id="N1" value="4" placeholder="n" size="1">
+                    <button onclick="create()">Crear</button>
+        
+                    <input type="text" id="N2" value="30" placeholder="n" size="1">
+                    <button onclick="nrand()" class="btn btn-success">Aleatorio</button>
+        
+        
+                    <input type="text" id="X" placeholder="x" size="1">
+                    <input type="text" id="Y" placeholder="y" size="1">
+                    <input type="text" id="Z" placeholder="z" size="1">
+        
+                    <button onclick="insert()">Insertar</button>
+        
+        
+                    <input type="text" id="CX" placeholder="x" size="1" value="75">
+                    <input type="text" id="CY" placeholder="y" size="1" value="75">
+                    <input type="text" id="CZ" placeholder="z" size="1" value="75">
+        
+                    <input type="text" id="CW" placeholder="w" size="1" value="25">
+                    <input type="text" id="CH" placeholder="h" size="1" value="25">
+                    <input type="text" id="CD" placeholder="d" size="1" value="25">
+        
+                    <button onclick="query()">Query</button>
+                    <button onclick="squery()">Mostrar Query</button>
+                    <button onclick="dquery()">Limpiar Query</button>
+                    <button onclick="clean()">Borrar</button>
+                    <h3></h3>
+                </div>
         
         <div id="found"></div> 
         
@@ -99,7 +105,7 @@
                         let box = new Box(cx,cy,cz,cw,ch,cd);
                         let found = [];
                         octree.query(box,found);
-                        document.getElementById("found").innerHTML = "Found points : " + found.length;
+                        document.getElementById("found").innerHTML = "Puntos Encontrados : " + found.length;
                     }
 
                     function squery(){

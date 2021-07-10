@@ -2,12 +2,43 @@
 
 <head>
 	<title> OcTree </title>
+	<script src="../../lib/bootstrap.min.js"> </script>
 	<script src="../../lib/p5.min.js"> </script>
 	<script src="js/octree.js"></script> 
 	<script src="js/sketch.js"> </script>
+
+	<link rel="stylesheet" href="../../css/bootstrap.min.css">
 </head>
 
 <body>
+
+	<form action="../../index.html">
+		<input type="submit" value="Regresar al inicio" />
+	</form>			
+
+	<div class="row justify-content-center">
+		<div class="btn-group btn-group-toggle justify-content-center" data-toggle="buttons">
+			<form action="../index_octree_three.html">
+				<input type="submit" value="Octree Three" />
+			</form>
+			<form action="../collisionOctree/games_fps.html">
+				<input type="submit" value="Colisiones" />
+			</form>	
+		</div>
+	</div>
+	<div class="row justify-content-center">
+		<div class="col-12">
+			<div id="dibujo"></div>
+		</div>
+	</div>
+	
 </body>
+
+<style>
+	#dibujo {
+		display: table;
+		margin: 0 auto;
+	}
+</style>
 
 </html>

@@ -17,7 +17,7 @@ class Cube{
         this.d = d; // profundidad
     }
     // verifica si un punto 3D pertenece al cubo
-    constains(point){
+    contains(point){
         // console.log('point cube ',this.x,' ', (this.x + this.w), ' ', (this.y - this.h),' ', this.y, (this.z - this.d),this.z);
         // console.log('point 3d ', point.x,' ',point.y,' ',point.z);
         return (
@@ -111,7 +111,7 @@ class OctTree {
     insert(point){
         // console.log('Insert point ... ', point);
         // Verifica que el punto este en los limites del cubo.
-        if(!this.boundary.constains(point)){
+        if(!this.boundary.contains(point)){
             return;
         }
         // verifica que hay espacio para insertar puntos
@@ -147,7 +147,7 @@ class OctTree {
             for (let i = 0; i < this.points.length; i++) {
                 let p = this.points[i];
                 // verifica el punto pertence al cubo externo
-                if(boundaryExtern.constains(p)){
+                if(boundaryExtern.contains(p)){
                     pointsReturn.push(p);
                     pp.push(p);
                 }                
